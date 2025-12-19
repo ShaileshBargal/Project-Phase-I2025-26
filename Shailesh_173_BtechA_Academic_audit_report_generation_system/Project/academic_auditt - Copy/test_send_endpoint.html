@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Send Request</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #06b6d4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>🧪 Test Send Request Endpoint</h2>
+
+    <p><button onclick="testSend()">Test Send Request</button></p>
+
+    <div id="result">Click the button above to test...</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function testSend() {
+            document.getElementById('result').innerHTML = '⏳ Sending test request...';
+
+            var data = {
+                action: 'send_request',
+                requirement: 'Test Requirement - ' + new Date().toLocaleTimeString(),
+                role_id: 1,
+                role_name: 'HOD',
+                semester: 'odd'
+            };
+
+            $.ajax({
+                url: 'send_request.php',
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (resp) {
+                    console.log('Success response:', resp);
+                    if (resp.ok) {
+                        document.getElementById('result').innerHTML =
+                            '<p class="success">✅ SUCCESS!</p>' +
+                            '<p>Message: ' + resp.msg + '</p>' +
+                            '<p>Response: <pre>' + JSON.stringify(resp, null, 2) + '</pre></p>';
+                    } else {
+                        document.getElementById('result').innerHTML =
+                            '<p class="error">❌ FAILED</p>' +
+                            '<p>Message: ' + resp.msg + '</p>' +
+                            '<p>Response: <pre>' + JSON.stringify(resp, null, 2) + '</pre></p>';
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', xhr, status, error);
+                    document.getElementById('result').innerHTML =
+                        '<p class="error">❌ NETWORK ERROR</p>' +
+                        '<p><strong>Status:</strong> ' + status + '</p>' +
+                        '<p><strong>Error:</strong> ' + error + '</p>' +
+                        '<p><strong>HTTP Status:</strong> ' + xhr.status + '</p>' +
+                        '<p><strong>Response Text:</strong></p>' +
+                        '<pre style="background:#fff;padding:10px;border:1px solid #ccc;overflow:auto;">' + xhr.responseText + '</pre>';
+                }
+            });
+        }
+    </script>
+
+    <hr>
+    <p><small>This tests the exact same endpoint that send_request.php uses. If this works, the issue is with the
+            JavaScript on the main page. If this fails, there's a server-side issue.</small></p>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Manage Incharge AJAX</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        .box {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Test Manage Incharge AJAX Response</h2>
+    <div id="status">Testing...</div>
+    <div id="output" class="box"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.post('manage_incharge.php', { action: 'fetch_history', semester: 'odd' })
+                .done(function (resp, textStatus, xhr) {
+                    if (typeof resp === 'object') {
+                        $('#status').html('<b style="color:green">✅ JSON Valid</b>');
+                        $('#output').text(JSON.stringify(resp, null, 2));
+                    } else {
+                        $('#status').html('<b style="color:red">❌ Invalid JSON (Type: ' + typeof resp + ')</b>');
+                        $('#output').text(resp);
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    $('#status').html('<b style="color:red">❌ Request Failed</b>');
+                    $('#output').text('Status: ' + status + '\nError: ' + error + '\nResponse:\n' + xhr.responseText);
+                });
+        });
+    </script>
+</body>
+
+</html>

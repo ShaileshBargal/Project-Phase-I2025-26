@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Send Request</title>
+</head>
+<body>
+<h2>Test Send Request Functionality</h2>
+
+<form id="testForm">
+  <p>Requirement: <input type="text" id="req" value="Test Requirement"></p>
+  <p>Role Name: <input type="text" id="role" value="HOD"></p>
+  <p>Role ID: <input type="number" id="roleId" value="1"></p>
+  <p>Semester: <input type="text" id="sem" value="odd"></p>
+  <button type="button" onclick="testSend()">Test Send</button>
+</form>
+
+<div id="result" style="margin-top:20px;padding:20px;border:1px solid #ccc;"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function testSend(){
+  var data = {
+    action: 'send_request',
+    requirement: document.getElementById('req').value,
+    role_name: document.getElementById('role').value,
+    role_id: document.getElementById('roleId').value,
+    semester: document.getElementById('sem').value
+  };
+  
+  document.getElementById('result').innerHTML = 'Sending request...<br><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+  
+  $.ajax({
+    url: 'send_request.php',
+    method: 'POST',
+    data: data,
+    dataType: 'json',
+    success: function(resp){
+      document.getElementById('result').innerHTML = 
+        '<strong style="color:green;">SUCCESS!</strong><br><pre>' + JSON.stringify(resp, null, 2) + '</pre>';
+    },
+    error: function(xhr, status, error){
+      document.getElementById('result').innerHTML = 
+        '<strong style="color:red;">ERROR!</strong><br>' +
+        'Status: ' + status + '<br>' +
+        'Error: ' + error + '<br>' +
+        'Response: <pre>' + xhr.responseText + '</pre>';
+    }
+  });
+}
+</script>
+</body>
+</html>
